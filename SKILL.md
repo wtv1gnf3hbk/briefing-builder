@@ -126,6 +126,46 @@ If yes, append a summary to their `~/.claude/CLAUDE.md`:
 
 ---
 
+## Time-Aware Greeting
+
+Before generating the briefing, detect the user's local time and select an appropriate greeting.
+
+### 1. Detect Local Time
+
+Run this command to get the user's current local time and timezone:
+
+```bash
+date "+%H:%M %p %Z"
+```
+
+This returns format like: `07:32 AM EST` or `21:32 PM KST`
+
+The timezone is detected from the user's machine settings, so it automatically adjusts when they travel.
+
+### 2. Select Greeting Based on Local Hour
+
+| Local Hour (24h) | Greeting |
+|------------------|----------|
+| 05:00 - 11:59 | Good morning |
+| 12:00 - 16:59 | Good afternoon |
+| 17:00 - 20:59 | Good evening |
+| 21:00 - 04:59 | (no greeting, start with "Here's the state of play") |
+
+### 3. Format the Briefing Header
+
+Include the timestamp in the greeting:
+
+```
+Good morning. Here's the state of play as of 7:32 AM EST:
+```
+
+Or for late night:
+```
+Here's the state of play as of 2:15 AM EST:
+```
+
+---
+
 ## Generate Briefing (`/briefing`)
 
 When user asks for their briefing:
@@ -182,7 +222,7 @@ Follow the user's style preference:
 
 **Conversational (default):**
 ```
-Good morning. Here's the state of play:
+[Time-appropriate greeting per Time-Aware Greeting section]. Here's the state of play as of [HH:MM AM/PM TZ]:
 
 [2-3 narrative paragraphs synthesizing the lead stories, with embedded links]
 
@@ -250,6 +290,37 @@ If source not in database:
    - `{url}/feed.xml`
 3. If RSS found, add to user's config
 4. If no RSS, offer live scraping
+
+---
+
+## Lead Story Selection (MANDATORY)
+
+When selecting the lead story for the briefing, apply these filters in order:
+
+### 1. Second-Day Filter
+Exclude anything that led yesterday's briefing UNLESS there are significant new developments. New analysis, new commentary, or "the story continues" framing does NOT count as a new development. A new development means: new facts, new official statements, new data, or a meaningful escalation/de-escalation.
+
+### 2. Recency Filter
+Story must have broken or significantly developed in the last 12-18 hours. If NYT published it yesterday morning, it's not today's lead.
+
+### 3. Scoop Bonus
+Prefer scoops over aggregated coverage. Look for "first reported by" or "according to [outlet] reporting" language in articles. A fresh exclusive beats ongoing coverage of a known situation.
+
+### 4. Surprise Test
+Apply the "would an informed reader be surprised?" test. Low-surprise stories (predictable developments, expected outcomes) should not lead. High-surprise stories (unexpected revelations, contradictions of conventional wisdom) should be weighted higher.
+
+**Low surprise examples:**
+- "ICE raids cause protests" (expected outcome)
+- "Stock market reacts to Fed decision" (routine)
+- "Politician criticized by opposition" (dog bites man)
+
+**High surprise examples:**
+- "UAE firm quietly bought into president's crypto company" (revelation)
+- "Administration official contradicts stated policy" (unexpected)
+- "[Country] reverses decades-old position on [issue]" (shift)
+
+### 5. Coverage Saturation Penalty
+If 15 outlets are leading with the same thing, your readers have probably already seen it. The briefing's value-add is surfacing what they missed, not echoing what everyone else is saying.
 
 ---
 
