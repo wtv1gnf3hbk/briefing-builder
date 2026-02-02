@@ -1,0 +1,48 @@
+{
+  "user": "your_name",
+  "focus": "general_international",
+  "description": "Example config - copy and customize for your needs",
+
+  "sources": {
+    "rss": [
+      "reuters",
+      "ap",
+      "afp",
+      "bbc",
+      "guardian",
+      "aljazeera",
+      "ft",
+      "economist"
+    ],
+    "live_scrape": [
+      {
+        "name": "WSJ",
+        "url": "https://www.wsj.com",
+        "screenshot": true,
+        "notes": "Check for scoops not in RSS"
+      }
+    ],
+    "custom_rss": [
+      {
+        "name": "Custom Source",
+        "url": "https://example.com/feed",
+        "notes": "Add your own RSS feeds here"
+      }
+    ]
+  },
+
+  "style": {
+    "format": "conversational",
+    "max_stories": 15,
+    "include_screenshots": false,
+    "sections": ["leads", "business", "regional"]
+  },
+
+  "output": {
+    "link_max_words": 3,
+    "attribution_style": "varied"
+  },
+
+  "created": "2026-02-02",
+  "last_updated": "2026-02-02"
+}

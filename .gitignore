@@ -1,0 +1,8 @@
+# User configs (contains personal preferences, not shared)
+configs/*.json
+
+# macOS
+.DS_Store
+
+# Keep the configs directory but not contents
+!configs/.gitkeep

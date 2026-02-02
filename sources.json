@@ -1,0 +1,377 @@
+{
+  "version": "1.0.0",
+  "description": "Curated RSS feeds and source mapping for news briefings. Extracted from Adam's rss-scraper.js.",
+
+  "sources": {
+    "wire_services": {
+      "reuters": {
+        "name": "Reuters",
+        "url": "https://news.google.com/rss/search?q=when:24h+allinurl:reuters.com&ceid=US:en&hl=en-US&gl=US",
+        "domain": "reuters.com",
+        "aliases": ["reuters"]
+      },
+      "ap": {
+        "name": "AP",
+        "url": "https://news.google.com/rss/search?q=when:24h+allinurl:apnews.com&ceid=US:en&hl=en-US&gl=US",
+        "domain": "apnews.com",
+        "aliases": ["ap", "associated press"]
+      },
+      "afp": {
+        "name": "AFP/France24",
+        "url": "https://www.france24.com/en/rss",
+        "domain": "france24.com",
+        "aliases": ["afp", "france24", "agence france-presse"]
+      }
+    },
+
+    "international_broadcasters": {
+      "bbc": {
+        "name": "BBC World",
+        "url": "http://feeds.bbci.co.uk/news/world/rss.xml",
+        "domain": "bbc.com",
+        "aliases": ["bbc", "bbc news", "bbc world"]
+      },
+      "cnn": {
+        "name": "CNN",
+        "feeds": [
+          { "name": "CNN World", "url": "http://rss.cnn.com/rss/edition_world.rss" },
+          { "name": "CNN Top Stories", "url": "http://rss.cnn.com/rss/edition.rss" }
+        ],
+        "domain": "cnn.com",
+        "aliases": ["cnn"]
+      },
+      "aljazeera": {
+        "name": "Al Jazeera",
+        "url": "https://www.aljazeera.com/xml/rss/all.xml",
+        "domain": "aljazeera.com",
+        "aliases": ["al jazeera", "aljazeera", "aje"]
+      }
+    },
+
+    "business_financial": {
+      "wsj": {
+        "name": "Wall Street Journal",
+        "feeds": [
+          { "name": "WSJ World", "url": "https://feeds.a.dj.com/rss/RSSWorldNews.xml" },
+          { "name": "WSJ Markets", "url": "https://feeds.a.dj.com/rss/RSSMarketsMain.xml" },
+          { "name": "WSJ Google", "url": "https://news.google.com/rss/search?q=when:24h+allinurl:wsj.com&ceid=US:en&hl=en-US&gl=US" }
+        ],
+        "domain": "wsj.com",
+        "aliases": ["wsj", "wall street journal"],
+        "notes": "RSS is thin - recommend also scraping homepage for scoops"
+      },
+      "ft": {
+        "name": "Financial Times",
+        "feeds": [
+          { "name": "FT Home", "url": "https://www.ft.com/rss/home" },
+          { "name": "FT Google", "url": "https://news.google.com/rss/search?q=when:24h+allinurl:ft.com&ceid=US:en&hl=en-US&gl=US" }
+        ],
+        "domain": "ft.com",
+        "aliases": ["ft", "financial times"]
+      },
+      "bloomberg": {
+        "name": "Bloomberg",
+        "feeds": [
+          { "name": "Bloomberg Markets", "url": "https://feeds.bloomberg.com/markets/news.rss" },
+          { "name": "Bloomberg Politics", "url": "https://feeds.bloomberg.com/politics/news.rss" },
+          { "name": "Bloomberg Google", "url": "https://news.google.com/rss/search?q=when:24h+allinurl:bloomberg.com&ceid=US:en&hl=en-US&gl=US" }
+        ],
+        "domain": "bloomberg.com",
+        "aliases": ["bloomberg", "bbg"]
+      },
+      "economist": {
+        "name": "Economist",
+        "url": "https://news.google.com/rss/search?q=when:7d+allinurl:economist.com&ceid=US:en&hl=en-US&gl=US",
+        "domain": "economist.com",
+        "aliases": ["economist", "the economist"]
+      },
+      "nikkei": {
+        "name": "Nikkei Asia",
+        "url": "https://news.google.com/rss/search?q=when:24h+allinurl:asia.nikkei.com&ceid=US:en&hl=en-US&gl=US",
+        "domain": "asia.nikkei.com",
+        "aliases": ["nikkei", "nikkei asia"]
+      }
+    },
+
+    "us_papers": {
+      "washpost": {
+        "name": "Washington Post",
+        "url": "https://feeds.washingtonpost.com/rss/world",
+        "domain": "washingtonpost.com",
+        "aliases": ["wapo", "washington post", "washpost"]
+      },
+      "latimes": {
+        "name": "LA Times",
+        "url": "https://www.latimes.com/world/rss2.0.xml",
+        "domain": "latimes.com",
+        "aliases": ["la times", "los angeles times", "latimes"]
+      },
+      "guardian": {
+        "name": "Guardian",
+        "url": "https://www.theguardian.com/world/rss",
+        "domain": "theguardian.com",
+        "aliases": ["guardian", "the guardian"]
+      }
+    },
+
+    "asia": {
+      "scmp": {
+        "name": "South China Morning Post",
+        "url": "https://www.scmp.com/rss/91/feed",
+        "domain": "scmp.com",
+        "aliases": ["scmp", "south china morning post"]
+      },
+      "japantimes": {
+        "name": "Japan Times",
+        "url": "https://www.japantimes.co.jp/feed/",
+        "domain": "japantimes.co.jp",
+        "aliases": ["japan times", "japantimes"]
+      },
+      "yomiuri": {
+        "name": "Yomiuri Shimbun",
+        "url": "https://news.google.com/rss/search?q=when:24h+allinurl:japannews.yomiuri.co.jp&ceid=US:en&hl=en-US&gl=US",
+        "domain": "japannews.yomiuri.co.jp",
+        "aliases": ["yomiuri", "yomiuri shimbun"]
+      },
+      "asahi": {
+        "name": "Asahi Shimbun",
+        "url": "https://news.google.com/rss/search?q=when:24h+allinurl:asahi.com/ajw&ceid=US:en&hl=en-US&gl=US",
+        "domain": "asahi.com",
+        "aliases": ["asahi", "asahi shimbun"]
+      }
+    },
+
+    "middle_east": {
+      "timesofisrael": {
+        "name": "Times of Israel",
+        "url": "https://www.timesofisrael.com/feed/",
+        "domain": "timesofisrael.com",
+        "aliases": ["times of israel", "toi"]
+      },
+      "haaretz": {
+        "name": "Haaretz",
+        "url": "https://news.google.com/rss/search?q=when:24h+allinurl:haaretz.com&ceid=US:en&hl=en-US&gl=US",
+        "domain": "haaretz.com",
+        "aliases": ["haaretz"]
+      }
+    },
+
+    "europe": {
+      "lemonde": {
+        "name": "Le Monde",
+        "url": "https://news.google.com/rss/search?q=when:24h+allinurl:lemonde.fr&ceid=US:en&hl=en-US&gl=US",
+        "domain": "lemonde.fr",
+        "aliases": ["le monde", "lemonde"],
+        "language": "fr"
+      },
+      "elpais": {
+        "name": "El Pais",
+        "url": "https://feeds.elpais.com/mrss-s/pages/ep/site/english.elpais.com/portada",
+        "domain": "elpais.com",
+        "aliases": ["el pais", "elpais"]
+      },
+      "elmundo": {
+        "name": "El Mundo",
+        "url": "https://news.google.com/rss/search?q=when:24h+allinurl:elmundo.es&ceid=US:en&hl=en-US&gl=US",
+        "domain": "elmundo.es",
+        "aliases": ["el mundo", "elmundo"],
+        "language": "es"
+      },
+      "lavanguardia": {
+        "name": "La Vanguardia",
+        "url": "https://news.google.com/rss/search?q=when:24h+allinurl:lavanguardia.com&ceid=US:en&hl=en-US&gl=US",
+        "domain": "lavanguardia.com",
+        "aliases": ["la vanguardia", "lavanguardia"],
+        "language": "es"
+      },
+      "bild": {
+        "name": "Bild",
+        "url": "https://news.google.com/rss/search?q=when:24h+site:bild.de&ceid=DE:de&hl=de&gl=DE",
+        "domain": "bild.de",
+        "aliases": ["bild"],
+        "language": "de"
+      },
+      "sueddeutsche": {
+        "name": "Sueddeutsche Zeitung",
+        "url": "https://news.google.com/rss/search?q=when:24h+allinurl:sueddeutsche.de&ceid=US:en&hl=en-US&gl=US",
+        "domain": "sueddeutsche.de",
+        "aliases": ["sueddeutsche", "sz", "suddeutsche zeitung"],
+        "language": "de"
+      },
+      "faz": {
+        "name": "Frankfurter Allgemeine",
+        "url": "https://news.google.com/rss/search?q=when:24h+allinurl:faz.net&ceid=US:en&hl=en-US&gl=US",
+        "domain": "faz.net",
+        "aliases": ["faz", "frankfurter allgemeine"],
+        "language": "de"
+      },
+      "corriere": {
+        "name": "Corriere della Sera",
+        "url": "https://news.google.com/rss/search?q=when:24h+allinurl:corriere.it&ceid=US:en&hl=en-US&gl=US",
+        "domain": "corriere.it",
+        "aliases": ["corriere", "corriere della sera"],
+        "language": "it"
+      },
+      "repubblica": {
+        "name": "La Repubblica",
+        "url": "https://news.google.com/rss/search?q=when:24h+allinurl:repubblica.it&ceid=US:en&hl=en-US&gl=US",
+        "domain": "repubblica.it",
+        "aliases": ["repubblica", "la repubblica"],
+        "language": "it"
+      },
+      "lastampa": {
+        "name": "La Stampa",
+        "url": "https://news.google.com/rss/search?q=when:24h+allinurl:lastampa.it&ceid=US:en&hl=en-US&gl=US",
+        "domain": "lastampa.it",
+        "aliases": ["la stampa", "lastampa"],
+        "language": "it"
+      }
+    },
+
+    "latin_america": {
+      "folha": {
+        "name": "Folha de S.Paulo",
+        "url": "https://news.google.com/rss/search?q=when:24h+allinurl:folha.uol.com.br&ceid=US:en&hl=en-US&gl=US",
+        "domain": "folha.uol.com.br",
+        "aliases": ["folha", "folha de sao paulo"],
+        "language": "pt"
+      },
+      "oglobo": {
+        "name": "O Globo",
+        "url": "https://news.google.com/rss/search?q=when:24h+allinurl:oglobo.globo.com&ceid=US:en&hl=en-US&gl=US",
+        "domain": "oglobo.globo.com",
+        "aliases": ["o globo", "globo"],
+        "language": "pt"
+      },
+      "estadao": {
+        "name": "Estadao",
+        "url": "https://news.google.com/rss/search?q=when:24h+allinurl:estadao.com.br&ceid=US:en&hl=en-US&gl=US",
+        "domain": "estadao.com.br",
+        "aliases": ["estadao", "estado de sao paulo"],
+        "language": "pt"
+      }
+    },
+
+    "aggregators": {
+      "newsItems": {
+        "name": "News Items",
+        "url": "https://substack.news-items.com/feed",
+        "domain": "news-items.com",
+        "aliases": ["news items"],
+        "notes": "Newsletter with curated links - good for story discovery"
+      },
+      "sill": {
+        "name": "Sill Daily Digest",
+        "url": "https://sill.social/digest/0194f545-c461-729b-96e4-ee7395b824af.rss",
+        "domain": "sill.social",
+        "aliases": ["sill"],
+        "notes": "Social link aggregator - shows what journalists are sharing"
+      },
+      "googlenews": {
+        "name": "Google News World",
+        "url": "https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en",
+        "domain": "news.google.com",
+        "aliases": ["google news"]
+      },
+      "semafor": {
+        "name": "Semafor",
+        "url": "https://news.google.com/rss/search?q=when:24h+allinurl:semafor.com&ceid=US:en&hl=en-US&gl=US",
+        "domain": "semafor.com",
+        "aliases": ["semafor"]
+      }
+    }
+  },
+
+  "domain_to_source": {
+    "wsj.com": "Wall Street Journal",
+    "nytimes.com": "New York Times",
+    "washingtonpost.com": "Washington Post",
+    "politico.com": "Politico",
+    "ft.com": "Financial Times",
+    "bloomberg.com": "Bloomberg",
+    "reuters.com": "Reuters",
+    "apnews.com": "AP",
+    "bbc.com": "BBC",
+    "bbc.co.uk": "BBC",
+    "theguardian.com": "Guardian",
+    "economist.com": "Economist",
+    "axios.com": "Axios",
+    "thehill.com": "The Hill",
+    "cnn.com": "CNN",
+    "nbcnews.com": "NBC News",
+    "cbsnews.com": "CBS News",
+    "abcnews.go.com": "ABC News",
+    "foxnews.com": "Fox News",
+    "latimes.com": "LA Times",
+    "thetimes.co.uk": "The Times (UK)",
+    "telegraph.co.uk": "Telegraph",
+    "semafor.com": "Semafor",
+    "punchbowl.news": "Punchbowl",
+    "theatlantic.com": "The Atlantic",
+    "newyorker.com": "New Yorker",
+    "vox.com": "Vox",
+    "npr.org": "NPR",
+    "aljazeera.com": "Al Jazeera",
+    "scmp.com": "South China Morning Post",
+    "japantimes.co.jp": "Japan Times",
+    "timesofisrael.com": "Times of Israel",
+    "haaretz.com": "Haaretz",
+    "bild.de": "Bild",
+    "sueddeutsche.de": "Sueddeutsche Zeitung",
+    "faz.net": "Frankfurter Allgemeine",
+    "lemonde.fr": "Le Monde",
+    "france24.com": "AFP/France24",
+    "elpais.com": "El Pais",
+    "elmundo.es": "El Mundo",
+    "lavanguardia.com": "La Vanguardia",
+    "corriere.it": "Corriere della Sera",
+    "repubblica.it": "La Repubblica",
+    "lastampa.it": "La Stampa",
+    "folha.uol.com.br": "Folha de S.Paulo",
+    "oglobo.globo.com": "O Globo",
+    "estadao.com.br": "Estadao",
+    "japannews.yomiuri.co.jp": "Yomiuri Shimbun",
+    "asahi.com": "Asahi Shimbun",
+    "asia.nikkei.com": "Nikkei Asia"
+  },
+
+  "presets": {
+    "general_international": {
+      "name": "General International",
+      "description": "Broad international news coverage - wire services plus major global outlets",
+      "sources": ["reuters", "ap", "afp", "bbc", "guardian", "aljazeera", "ft", "economist"],
+      "live_scrape": []
+    },
+    "asia_focus": {
+      "name": "Asia Focus",
+      "description": "Asia-Pacific regional coverage with wire service backup",
+      "sources": ["scmp", "japantimes", "nikkei", "yomiuri", "asahi", "reuters", "ap", "bbc"],
+      "live_scrape": []
+    },
+    "europe_focus": {
+      "name": "Europe Focus",
+      "description": "European regional coverage including key national papers",
+      "sources": ["guardian", "lemonde", "elpais", "bild", "corriere", "sueddeutsche", "reuters", "ap", "bbc"],
+      "live_scrape": []
+    },
+    "middle_east_focus": {
+      "name": "Middle East Focus",
+      "description": "Middle East regional coverage",
+      "sources": ["aljazeera", "timesofisrael", "haaretz", "reuters", "ap", "bbc"],
+      "live_scrape": []
+    },
+    "latin_america_focus": {
+      "name": "Latin America Focus",
+      "description": "Latin American regional coverage",
+      "sources": ["folha", "oglobo", "estadao", "elpais", "reuters", "ap", "bbc"],
+      "live_scrape": []
+    },
+    "business_finance": {
+      "name": "Business & Finance",
+      "description": "Business and financial news focus",
+      "sources": ["ft", "bloomberg", "wsj", "economist", "nikkei", "reuters"],
+      "live_scrape": ["https://www.wsj.com"],
+      "notes": "WSJ homepage scrape catches scoops not in RSS"
+    }
+  }
+}
