@@ -98,7 +98,7 @@ Common suggestions: WSJ, FT, Politico, Bloomberg
 ### Step 5: Output Style
 
 > "How do you want your briefing formatted?
-> - **Conversational** (like talking to a well-informed friend)
+> - **Conversational** (like talking to a well-informed friend, but never use 's as a contraction for "is")
 > - **Bullet summary** (quick scan, one line per story)
 > - **Detailed** (includes excerpts for deep research)"
 
@@ -216,6 +216,17 @@ Returns JSON with `briefs` array containing Economist's editorial pick of top gl
 - Note which outlets are covering the same story
 - Flag stories with 3+ outlet coverage as "big stories"
 
+### 4a. Business/Tech Keyword Scan (MANDATORY)
+
+Before generating the briefing, explicitly search ALL RSS results for these high-value keywords:
+- **Company names**: Apple, Google, Microsoft, Amazon, Meta, Tesla, SpaceX, OpenAI, Nvidia, xAI
+- **Deal terms**: merger, acquisition, acquires, IPO, funding, billion, trillion
+- **People**: Musk, Bezos, Zuckerberg, Altman, Nadella, Cook, Pichai
+
+Run a grep/search through the full feed output for these terms. If any story contains these keywords and you haven't already flagged it, add it to the briefing.
+
+**Why this matters:** Business/tech stories often appear in only 1-2 feeds (Japan Times, SCMP, Bloomberg) and can be missed when scanning headlines quickly. A $1.2 trillion merger should never be missed.
+
 ### 5. Generate Briefing
 
 Follow the user's style preference:
@@ -295,16 +306,39 @@ If source not in database:
 
 ## Lead Story Selection (MANDATORY)
 
+### 0. Check Yesterday's Lead (First!)
+Before selecting today's lead, check the lead log:
+
+```
+~/.claude/skills/briefing-builder/lead-log.json
+```
+
+Format:
+```json
+{
+  "2026-02-01": {"lead": "Immigration enforcement in Minnesota", "topic": "immigration"},
+  "2026-01-31": {"lead": "Trump tariff announcement", "topic": "tariffs"}
+}
+```
+
+After generating each briefing, append today's lead to this log.
+
 When selecting the lead story for the briefing, apply these filters in order:
 
 ### 1. Second-Day Filter
-Exclude anything that led yesterday's briefing UNLESS there are significant new developments. New analysis, new commentary, or "the story continues" framing does NOT count as a new development. A new development means: new facts, new official statements, new data, or a meaningful escalation/de-escalation.
+Exclude anything that led yesterday's briefing (check `lead-log.json`) UNLESS there are significant new developments. New analysis, new commentary, or "the story continues" framing does NOT count as a new development. A new development means: new facts, new official statements, new data, or a meaningful escalation/de-escalation.
 
 ### 2. Recency Filter
 Story must have broken or significantly developed in the last 12-18 hours. If NYT published it yesterday morning, it's not today's lead.
 
-### 3. Scoop Bonus
-Prefer scoops over aggregated coverage. Look for "first reported by" or "according to [outlet] reporting" language in articles. A fresh exclusive beats ongoing coverage of a known situation.
+### 3. Scoop Detection
+Prefer scoops over aggregated coverage. Detect scoops via:
+
+1. **Language signals**: Look for "first reported by", "according to [outlet] reporting", "exclusively learned", "[Outlet] has learned"
+2. **Timestamp comparison**: When multiple outlets cover the same story, check pubDates. If one outlet has it 6+ hours before others, that's likely the scoop. Credit the original outlet.
+3. **Single-source stories**: If only one major outlet is covering something newsworthy, it's probably their scoop.
+
+A fresh exclusive beats ongoing coverage of a known situation.
 
 ### 4. Surprise Test
 Apply the "would an informed reader be surprised?" test. Low-surprise stories (predictable developments, expected outcomes) should not lead. High-surprise stories (unexpected revelations, contradictions of conventional wisdom) should be weighted higher.
@@ -321,6 +355,22 @@ Apply the "would an informed reader be surprised?" test. Low-surprise stories (p
 
 ### 5. Coverage Saturation Penalty
 If 15 outlets are leading with the same thing, your readers have probably already seen it. The briefing's value-add is surfacing what they missed, not echoing what everyone else is saying.
+
+### 6. Reasoning on Demand
+Do NOT include lead selection reasoning in the briefing output by default. Instead:
+- Mentally apply all filters and make lead selection decisions
+- Keep reasoning ready but hidden
+- If Adam asks "why did you lead with X?", "show your reasoning", "why not Y?", or similar → provide the full reasoning
+
+**When providing reasoning, explain:**
+- Why the lead story was chosen (which filters it passed)
+- What stories were considered but demoted, and why
+- Any close calls or judgment calls made
+
+**Example reasoning (only when asked):**
+```
+The UAE crypto story leads because it's a fresh scoop (WSJ), high surprise (unexpected foreign investment in president's company), and not saturated across outlets. Immigration was demoted to a bullet because it's been the lead for multiple days and today's developments (release of one family) don't constitute a significant escalation.
+```
 
 ---
 
@@ -363,14 +413,182 @@ Bullets should be pure news, no commentary.
 - BAD: "The AI arms race is getting expensive fast."
 - GOOD: "OpenAI is raising prices for API access, citing compute costs."
 
-### 7. Max 3 words per link
-Hard rule for hyperlink text.
+### 7. Link Text Optimization
+Hard rule: max 3 words per link, and link the NEWS not the attribution.
+
+**Link the news:**
+- BAD: `the [BBC reports](url)` (link on attribution)
+- GOOD: `[killed 12 miners](url), the BBC reports` (link on news)
+
+**Keep links short:**
 - BAD: `[Federal Reserve is investigating the bank](url)`
 - GOOD: `[Fed is investigating](url) the bank`
+
+The linked text should be the most informative/clickable part of the sentence.
 
 ### 8. Varied attribution
 Mix it up: "Reuters reports", "according to Bloomberg", "per AP", "the BBC reports"
 Use each phrasing only once per briefing.
+
+### 9. Non-NYT Source Quota (MANDATORY)
+At least 2 bullets in the "Around the World" section must link to non-NYT sources (BBC, Al Jazeera, Reuters, AP, SCMP, Guardian, FT, etc.).
+
+This is a hard requirement, not a suggestion. If the briefing only has NYT links in the international section, go back and find non-NYT coverage for at least 2 stories.
+
+---
+
+## Story Clustering (Before Lead Selection)
+
+Before picking the lead, cluster all gathered stories by topic:
+
+1. **Group stories**: Match headlines by key entities (people, places, events) and keywords
+2. **Create clusters**: "Trump immigration", "Epstein files", "Ukraine war", "Iran nuclear", etc.
+3. **Score clusters**: Weight by (a) number of outlets covering, (b) recency, (c) surprise factor
+4. **Pick lead from top cluster**: The lead should come from the most newsworthy cluster, not picked in isolation
+
+This prevents picking a minor scoop that's actually a subplot of a bigger story.
+
+---
+
+## Coverage Check (After Drafting)
+
+After drafting the briefing, scan for missing regions:
+
+**Required regions** (at least a mention or explicit acknowledgment):
+- Europe
+- Asia
+- Middle East
+- Africa
+- Latin America
+
+If any region has zero coverage:
+1. First, try to find something from that region in the gathered sources
+2. If genuinely nothing newsworthy, that's fine - but be aware of the gap
+3. Don't manufacture coverage just to fill the slot
+
+**Flag for Adam** if 2+ regions are missing - this might indicate a source gap or unusually quiet news day in those areas.
+
+---
+
+## Pre-Publish Validation (MANDATORY)
+
+Before outputting the briefing, run these automated checks. This is NOT optional.
+
+### 1. Contraction Detection (STOP AND LIST)
+
+**MANDATORY STEP:** Before outputting the briefing, you MUST:
+1. Find every instance of `'s` in your draft
+2. List them out loud (in your thinking, not to user)
+3. For each one, check: is the next word a VERB or a NOUN?
+
+**Common verbs that follow contractions (FIX THESE):**
+- named, announced, said, reported, confirmed, denied
+- merging, acquiring, raising, heading, planning, considering, expanding
+- reportedly, expected, set, planning
+
+**Example violations and HOW TO FIX:**
+- `Disney's named` → "Disney named" (past tense verb: DROP the 's)
+- `OpenAI's said` → "OpenAI said" (past tense verb: DROP the 's)
+- `Musk's merging` → "Musk is merging" (present continuous: EXPAND to "is")
+- `Amazon's raising` → "Amazon is raising" (present continuous: EXPAND to "is")
+- `India's heading` → "India is heading" (present continuous: EXPAND to "is")
+- `Tesla's reportedly` → "Tesla is reportedly" (adverb: EXPAND to "is")
+
+**The fix depends on tense:**
+- Past tense verbs (named, said, announced, confirmed): DROP the 's
+- Present continuous (-ing verbs): EXPAND 's to "is"
+
+**SAFE patterns (possessives - keep):**
+- `Amazon's CEO` → CEO is a noun = possessive ✓
+- `Trump's administration` → administration is a noun ✓
+- `Disney's board` → board is a noun ✓
+
+### 2. Banned Phrase Scan (Exact String Match)
+
+Search for these EXACT strings. If found, delete the phrase or rewrite the sentence:
+
+```
+It's a reminder
+highlighting how
+a testament to
+This signals
+it suggests
+It's exactly the kind of
+which could
+This isn't just about
+makes diplomats nervous
+reaching a crescendo
+```
+
+### 3. Business/Tech Highlights Check
+
+The MCP response includes a `businessTechHighlights` section with pre-extracted stories matching keywords (SpaceX, merger, IPO, billion, etc.).
+
+**MANDATORY:** Review this section. If it contains stories not already in your briefing draft, add them.
+
+### 4. Feed Health Check
+
+The MCP response includes `feedHealth.failed` with any RSS feeds that couldn't be fetched.
+
+**If 3+ feeds failed:** Add a note at the end of the briefing:
+> "Note: Some sources were unreachable today: [list failed sources]"
+
+### 5. NYT Coverage Check (MANDATORY - MOST IMPORTANT)
+
+**NYT is the primary news source.** Before outputting, verify NYT stories are included:
+
+1. **Count NYT links**: Scan the draft for `nytimes.com` URLs
+2. **Minimum threshold**: At least 5 NYT links must appear in the briefing
+3. **If below threshold**:
+   - STOP - do not output the briefing yet
+   - Scrape NYT directly using:
+     ```bash
+     node -e '...' # (NYT scraper in nyt-concierge)
+     ```
+     Or via the `generate_briefing` MCP tool
+   - Add missing NYT stories to relevant sections
+   - Re-run this check
+
+**NYT scrape fallback (if MCP times out):**
+```bash
+cd /Users/adampasick/Downloads/nyt-concierge && node -e '
+const https = require("https");
+const cheerio = require("cheerio");
+// ... [scraper code - see server.js scrapeNYT function]
+'
+```
+
+**Section coverage**: Ensure NYT links appear in:
+- Lead paragraphs (at least 1)
+- Business/Tech section (at least 1)
+- Around the World section (at least 2)
+
+**Why this matters**: NYT is Adam's employer and the most important source for his briefing. A briefing without NYT stories is incomplete. Other sources (BBC, FT, SCMP, Al Jazeera) provide international perspective, but NYT must always be present.
+
+### 6. Validation Loop (Retry Until Pass)
+
+**Process:**
+1. Draft the briefing
+2. Run checks 1-5 (contraction, banned phrase, business/tech, feed health, NYT coverage)
+3. If ANY violation found:
+   - Fix the violation
+   - Increment attempt counter
+   - Re-run checks 1-2 and 5 (contraction, banned phrase, NYT coverage)
+4. Repeat until ALL checks pass
+
+**NYT check is blocking**: If NYT coverage is below threshold, you MUST fetch NYT stories before continuing. Do not output a briefing with fewer than 5 NYT links.
+
+**Attempt tracking:**
+- Attempt 1-2: Fix silently, continue
+- Attempt 3: Fix, then warn Adam: "⚠️ Validation took 3 attempts. Issues found: [list what was fixed]"
+- Attempt 4+: Fix, warn with stronger message: "🚨 Validation required {N} attempts. Consider reviewing the draft more carefully."
+
+**What to report on warn:**
+- Which 's contractions were fixed (and how)
+- Which banned phrases were removed
+- Do NOT include business/tech or feed health in attempt count (those are one-time checks)
+
+**Do not skip this.** The briefing must pass validation before output. The loop ensures quality without blocking output indefinitely.
 
 ---
 

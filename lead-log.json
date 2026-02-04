@@ -1,0 +1,8 @@
+{
+  "_usage": "Check yesterday's entry before selecting today's lead. Same topic = second-day filter applies.",
+  "_auto_update": "Add new entry after each briefing: {date: {lead: 'headline', topic: 'slug'}}",
+  "2026-02-04": {"lead": "Epstein fallout widens - Mandelson criminal probe, Clintons to testify", "topic": "epstein-fallout"},
+  "2026-02-03": {"lead": "India-US tariff deal - Modi agrees to cut Russian oil purchases", "topic": "india-tariffs"},
+  "2026-02-02": {"lead": "Epstein files released - Norway princess, Mandelson, Clinton revelations", "topic": "epstein-files"},
+  "2026-02-01": {"lead": "UAE firm bought stake in Trump crypto company", "topic": "trump-finances"}
+}
